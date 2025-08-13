@@ -16,7 +16,7 @@ document.getElementById("exportBtn").addEventListener("click", () => {
           `"${post.content.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
           post.likes,
           post.comments,
-          post.timestamp
+          post.date || post.timestamp
         ]);
 
         const csvContent = [csvHeaders.join(','), ...rows.map(row => row.join(','))].join('\n');
@@ -64,12 +64,16 @@ document.getElementById("showBtn").addEventListener("click", () => {
         const table = document.createElement('table');
         table.style.width = '100%';
         table.style.borderCollapse = 'collapse';
+        table.style.tableLayout = 'fixed';
 
         const headerRow = document.createElement('tr');
-        ['Auteur', 'Contenu', 'Likes', 'Commentaires', 'Date'].forEach(h => {
+        const headers = ['Auteur', 'Contenu', 'Likes', 'Commentaires', 'Date'];
+        const widths = ['17%', '32%', '17%', '17%', '17%'];
+        headers.forEach((h, i) => {
           const th = document.createElement('th');
           th.textContent = h;
           th.style.cssText = 'text-align:left;border-bottom:1px solid #ccc;padding:4px';
+          th.style.width = widths[i];
           headerRow.appendChild(th);
         });
         table.appendChild(headerRow);
@@ -77,22 +81,13 @@ document.getElementById("showBtn").addEventListener("click", () => {
         data.forEach(post => {
           const row = document.createElement('tr');
           const snippet = post.content.length > 100 ? post.content.slice(0, 100) + '…' : post.content;
-          [post.author, snippet, post.likes, post.comments,post.date].forEach(text => {
+          [post.author, snippet, post.likes, post.comments, post.date || post.timestamp].forEach((text, i) => {
             const td = document.createElement('td');
             td.textContent = text;
             td.style.cssText = 'border-bottom:1px solid #eee;padding:4px';
+            td.style.width = widths[i];
             row.appendChild(td);
           });
-          const linkTd = document.createElement('td');
-          const a = document.createElement('a');
-          a.href = post.link || '#';
-          a.textContent = 'Ouvrir';
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.addEventListener('click', e => e.stopPropagation());
-          linkTd.appendChild(a);
-          linkTd.style.cssText = 'border-bottom:1px solid #eee;padding:4px';
-          row.appendChild(linkTd);
           table.appendChild(row);
         });
 
