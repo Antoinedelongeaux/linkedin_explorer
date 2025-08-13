@@ -10,14 +10,12 @@ document.getElementById("exportBtn").addEventListener("click", () => {
         }
 
         // Génère le CSV
-        const csvHeaders = ["Auteur", "Contenu", "Format", "Likes", "Commentaires", "Lien", "Date"];
+        const csvHeaders = ["Auteur", "Contenu",  "Likes", "Commentaires",  "Date"];
         const rows = data.map(post => [
           `"${post.author.replace(/"/g, '""')}"`,
           `"${post.content.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
-          post.format,
           post.likes,
           post.comments,
-          post.link,
           post.timestamp
         ]);
 
@@ -55,7 +53,7 @@ document.getElementById("showBtn").addEventListener("click", () => {
 
         const sidebar = document.createElement('div');
         sidebar.id = 'linkedinSidebar';
-        sidebar.style.cssText = 'position:fixed;top:0;right:0;width:400px;height:100%;background:white;z-index:9999;box-shadow:0 0 10px rgba(0,0,0,0.3);overflow:auto;padding:10px;font-family:sans-serif;';
+        sidebar.style.cssText = 'position:fixed;top:0;right:0;width:600px;height:100%;background:white;z-index:9999;box-shadow:0 0 10px rgba(0,0,0,0.3);overflow:auto;padding:10px;font-family:sans-serif;';
 
         const closeBtn = document.createElement('button');
         closeBtn.textContent = 'Fermer';
@@ -68,7 +66,7 @@ document.getElementById("showBtn").addEventListener("click", () => {
         table.style.borderCollapse = 'collapse';
 
         const headerRow = document.createElement('tr');
-        ['Auteur', 'Contenu', 'Format', 'Likes', 'Commentaires', 'Lien'].forEach(h => {
+        ['Auteur', 'Contenu', 'Likes', 'Commentaires', 'Date'].forEach(h => {
           const th = document.createElement('th');
           th.textContent = h;
           th.style.cssText = 'text-align:left;border-bottom:1px solid #ccc;padding:4px';
@@ -79,7 +77,7 @@ document.getElementById("showBtn").addEventListener("click", () => {
         data.forEach(post => {
           const row = document.createElement('tr');
           const snippet = post.content.length > 100 ? post.content.slice(0, 100) + '…' : post.content;
-          [post.author, snippet, post.format, post.likes, post.comments].forEach(text => {
+          [post.author, snippet, post.likes, post.comments,post.date].forEach(text => {
             const td = document.createElement('td');
             td.textContent = text;
             td.style.cssText = 'border-bottom:1px solid #eee;padding:4px';
