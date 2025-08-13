@@ -18,11 +18,15 @@
         cursor: pointer;
         border-radius: 5px;
       }
+      button + button {
+        margin-top: 0.5rem;
+      }
     </style>
   </head>
   <body>
     <h3>LinkedIn Post Tracker</h3>
     <button id="exportBtn">📤 Exporter les 100 posts</button>
+    <button id="showBtn">👁️ Afficher les posts</button>
     <p id="status"></p>
 
     <script src="popup.js"></script>
