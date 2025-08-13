@@ -26,6 +26,11 @@ function extractPostData(postElement) {
     postElement.querySelector('a[href*="/posts/"]') ||
     postElement.querySelector('a[href*="/activity/"]');
   const link = linkEl ? linkEl.href : '';
+
+  // 🕒 Date de publication
+  const timeEl = postElement.querySelector('time');
+  const date = timeEl ? timeEl.getAttribute('datetime') || timeEl.innerText.trim() : new Date().toISOString();
+
   // ❤️ Réactions
   const likesText = postElement.querySelector('.social-details-social-counts__reactions-count')?.innerText || '0';
   const likes = parseInt(likesText.replace(/\D/g, '') || '0');
@@ -41,7 +46,7 @@ function extractPostData(postElement) {
     likes,
     comments,
     link,
-    timestamp: new Date().toISOString()
+    date
   };
 }
 
