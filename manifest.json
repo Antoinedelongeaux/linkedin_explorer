@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "LinkedIn Post Tracker",
+  "version": "1.0",
+  "description": "Scrape les publications vues sur LinkedIn feed",
+  "permissions": ["storage", "scripting", "activeTab"],
+  "host_permissions": [
+    "https://www.linkedin.com/feed/*"
+  ],
+  "action": {
+    "default_title": "Voir les posts",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/feed/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
