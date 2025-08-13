@@ -7,6 +7,19 @@ function extractPostData(postElement) {
   // 👤 Auteur du post
   const author = postElement.querySelector('.update-components-actor__title span[aria-hidden="true"]')?.innerText.trim() || 'Inconnu';
 
+  // 🎞️ Format du post : texte, image, vidéo, caroussel
+  let format = 'texte';
+  if (postElement.querySelector('video')) {
+    format = 'vidéo';
+  } else {
+    const images = postElement.querySelectorAll('img');
+    if (images.length > 1) {
+      format = 'caroussel';
+    } else if (images.length === 1) {
+      format = 'image';
+    }
+  }
+
   // 🔗 Lien direct vers le post
   const linkEl =
     postElement.querySelector('a[href*="/feed/update/"]') ||
@@ -24,6 +37,7 @@ function extractPostData(postElement) {
   return {
     content,
     author,
+    format,
     likes,
     comments,
     link,

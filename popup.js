@@ -10,12 +10,14 @@ document.getElementById("exportBtn").addEventListener("click", () => {
         }
 
         // Génère le CSV
-        const csvHeaders = ["Auteur", "Contenu", "Likes", "Commentaires", "Date"];
+        const csvHeaders = ["Auteur", "Contenu", "Format", "Likes", "Commentaires", "Lien", "Date"];
         const rows = data.map(post => [
           `"${post.author.replace(/"/g, '""')}"`,
           `"${post.content.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
+          post.format,
           post.likes,
           post.comments,
+          post.link,
           post.timestamp
         ]);
 
@@ -66,7 +68,7 @@ document.getElementById("showBtn").addEventListener("click", () => {
         table.style.borderCollapse = 'collapse';
 
         const headerRow = document.createElement('tr');
-        ['Auteur', 'Likes', 'Commentaires', 'Lien'].forEach(h => {
+        ['Auteur', 'Contenu', 'Format', 'Likes', 'Commentaires', 'Lien'].forEach(h => {
           const th = document.createElement('th');
           th.textContent = h;
           th.style.cssText = 'text-align:left;border-bottom:1px solid #ccc;padding:4px';
@@ -76,7 +78,8 @@ document.getElementById("showBtn").addEventListener("click", () => {
 
         data.forEach(post => {
           const row = document.createElement('tr');
-          [post.author, post.likes, post.comments].forEach(text => {
+          const snippet = post.content.length > 100 ? post.content.slice(0, 100) + '…' : post.content;
+          [post.author, snippet, post.format, post.likes, post.comments].forEach(text => {
             const td = document.createElement('td');
             td.textContent = text;
             td.style.cssText = 'border-bottom:1px solid #eee;padding:4px';
@@ -87,6 +90,8 @@ document.getElementById("showBtn").addEventListener("click", () => {
           a.href = post.link || '#';
           a.textContent = 'Ouvrir';
           a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.addEventListener('click', e => e.stopPropagation());
           linkTd.appendChild(a);
           linkTd.style.cssText = 'border-bottom:1px solid #eee;padding:4px';
           row.appendChild(linkTd);
