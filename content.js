@@ -7,8 +7,12 @@ function extractPostData(postElement) {
   // 👤 Auteur du post
   const author = postElement.querySelector('.update-components-actor__title span[aria-hidden="true"]')?.innerText.trim() || 'Inconnu';
 
-
-
+  // 🔗 Lien direct vers le post
+  const linkEl =
+    postElement.querySelector('a[href*="/feed/update/"]') ||
+    postElement.querySelector('a[href*="/posts/"]') ||
+    postElement.querySelector('a[href*="/activity/"]');
+  const link = linkEl ? linkEl.href : '';
   // ❤️ Réactions
   const likesText = postElement.querySelector('.social-details-social-counts__reactions-count')?.innerText || '0';
   const likes = parseInt(likesText.replace(/\D/g, '') || '0');
@@ -22,6 +26,7 @@ function extractPostData(postElement) {
     author,
     likes,
     comments,
+    link,
     timestamp: new Date().toISOString()
   };
 }
