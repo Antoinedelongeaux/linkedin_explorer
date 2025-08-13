@@ -11,13 +11,20 @@ document.getElementById("exportBtn").addEventListener("click", () => {
 
         // Génère le CSV
         const csvHeaders = ["Auteur", "Contenu",  "Likes", "Commentaires",  "Date"];
-        const rows = data.map(post => [
-          `"${post.author.replace(/"/g, '""')}"`,
-          `"${post.content.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
-          post.likes,
-          post.comments,
-          post.date || post.timestamp
-        ]);
+   // Dans l'export CSV
+const rows = data.map(post => {
+  const dateObj = new Date(post.date || post.timestamp);
+  const shortDate = dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+
+  return [
+    `"${post.author.replace(/"/g, '""')}"`,
+    `"${post.content.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
+    post.likes,
+    post.comments,
+    shortDate
+  ];
+});
+
 
         const csvContent = [csvHeaders.join(','), ...rows.map(row => row.join(','))].join('\n');
 
@@ -67,8 +74,8 @@ document.getElementById("showBtn").addEventListener("click", () => {
         table.style.tableLayout = 'fixed';
 
         const headerRow = document.createElement('tr');
-        const headers = ['Auteur', 'Contenu', 'Likes', 'Commentaires', 'Date'];
-        const widths = ['17%', '32%', '17%', '17%', '17%'];
+        const headers = ['Auteur', 'Contenu', 'Likes', 'Comm.', 'Date'];
+        const widths = ['15%', '50%', '10%', '10%', '15%'];
         headers.forEach((h, i) => {
           const th = document.createElement('th');
           th.textContent = h;
@@ -78,18 +85,23 @@ document.getElementById("showBtn").addEventListener("click", () => {
         });
         table.appendChild(headerRow);
 
-        data.forEach(post => {
-          const row = document.createElement('tr');
-          const snippet = post.content.length > 100 ? post.content.slice(0, 100) + '…' : post.content;
-          [post.author, snippet, post.likes, post.comments, post.date || post.timestamp].forEach((text, i) => {
-            const td = document.createElement('td');
-            td.textContent = text;
-            td.style.cssText = 'border-bottom:1px solid #eee;padding:4px';
-            td.style.width = widths[i];
-            row.appendChild(td);
-          });
-          table.appendChild(row);
-        });
+// Dans l'affichage du tableau dans la sidebar
+data.forEach(post => {
+  const dateObj = new Date(post.date || post.timestamp);
+  const shortDate = dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+
+  const row = document.createElement('tr');
+  const snippet = post.content.length > 100 ? post.content.slice(0, 100) + '…' : post.content;
+  [post.author, snippet, post.likes, post.comments, shortDate].forEach((text, i) => {
+    const td = document.createElement('td');
+    td.textContent = text;
+    td.style.cssText = 'border-bottom:1px solid #eee;padding:4px';
+    td.style.width = widths[i];
+    row.appendChild(td);
+  });
+  table.appendChild(row);
+});
+
 
         sidebar.appendChild(table);
         document.body.appendChild(sidebar);
